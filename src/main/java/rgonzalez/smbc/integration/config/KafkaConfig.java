@@ -131,32 +131,6 @@ public class KafkaConfig {
     }
 
     /**
-     * Producer Factory for BusinessEvent with String serialization for keys and
-     * JSON for values for customer verifications
-     */
-    @Bean
-    public ProducerFactory<String, BusinessEvent> customerVerificationsProducerFactory(
-            KafkaProperties kafkaProperties) {
-        Map<String, Object> configProps = new HashMap<>(kafkaProperties.buildProducerProperties());
-        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        configProps.put(ProducerConfig.ACKS_CONFIG, "all");
-        configProps.put(ProducerConfig.RETRIES_CONFIG, 3);
-        return new DefaultKafkaProducerFactory<>(configProps);
-    }
-
-    /**
-     * KafkaTemplate for sending BusinessEvent messages to customer-verifications
-     * topic
-     * The aggregate id will be used as the message key
-     */
-    @Bean
-    public KafkaTemplate<String, BusinessEvent> customerVerificationsKafkaTemplate(
-            ProducerFactory<String, BusinessEvent> customerVerificationsProducerFactory) {
-        return new KafkaTemplate<>(customerVerificationsProducerFactory);
-    }
-
-    /**
      * Producer Factory for SsnVerificationResult with String serialization for keys
      * and
      * JSON for values for customer SSN verification outcomes
@@ -169,7 +143,7 @@ public class KafkaConfig {
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         configProps.put(ProducerConfig.ACKS_CONFIG, "all");
         configProps.put(ProducerConfig.RETRIES_CONFIG, 3);
-        configProps.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, true);
+        configProps.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, false);
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
